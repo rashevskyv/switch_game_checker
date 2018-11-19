@@ -8,6 +8,7 @@ echo ------------------------------------------------------------------------
 
 echo * Unpacking of %~n1, please wait!
 echo    - Programm is not freezing. Be patient!
+echo    (программа не зависла, а распаковывает игру)
 
 set tempdir_game=temp
 Set url=https://pastebin.com/raw/GQesC1bj
