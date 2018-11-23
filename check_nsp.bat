@@ -123,8 +123,4 @@ echo.
 rmdir /Q /S %tempdir_game% >nul 2>&1
 del /q check.log >nul 2>&1
 echo.
-<<<<<<< HEAD
 pause
-=======
-pause
->>>>>>> 2e0a8c163e1d286f153a87e709a44734949d8b05
