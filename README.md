@@ -1,3 +1,7 @@
+Simple check NSP and XCI script
+
+Russian-language guide for everything - http://switch.customfw.xyz
+
 ## Instruction
 
 1. Download [hactool](https://github.com/SciresM/hactool/releases/latest)
