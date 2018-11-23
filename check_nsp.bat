@@ -6,19 +6,27 @@ echo        %~n1
 echo.
 echo ------------------------------------------------------------------------
 
-echo * Unpacking of %~n1, please wait!
-echo    - Programm is not freezing. Be patient!
-echo    (программа не зависла, а распаковывает игру)
-
 set tempdir_game=temp
-Set keys_url=https://pastebin.com/raw/GQesC1bj
-Set keys=keys.txt
 
 for /f "delims=" %%i in ("%0") do set "curpath=%%~dpi"
 chdir /d %curpath%
 
+if not exist keys.txt (
+COLOR 4
+echo.
+echo.
+echo Get your keys first! Use kezplez on Switch or google it!
+echo.
+echo.
+pause
+exit
+)
+
+echo * Unpacking of %~n1, please wait!
+echo    - Programm is not freezing. Be patient!
+echo    (программа не зависла, а распаковывает игру)
+
 if not exist %tempdir_game% (mkdir %tempdir_game%)
-if not exist %keys% (Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('%keys_url%','%keys%')")
 
 if "%~x1" == ".nsp" (hactool.exe %1 -k keys.txt -x --intype=pfs0 --pfs0dir=%tempdir_game% >nul 2>&1
 ) else (hactool.exe %1 -k keys.txt -txci --securedir=%tempdir_game% >nul 2>&1)
@@ -67,6 +75,7 @@ COLOR 4
 echo              %~n1 IS CORRUPTED!
 echo.
 echo ------------------------------------------------------------------------
+echo.
 ) ELSE (
 cls
 echo.
@@ -113,5 +122,5 @@ echo.
 :end
 rmdir /Q /S %tempdir_game% >nul 2>&1
 del /q check.log >nul 2>&1
-
+echo.
 pause
