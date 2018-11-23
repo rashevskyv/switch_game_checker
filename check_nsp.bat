@@ -11,14 +11,14 @@ echo    - Programm is not freezing. Be patient!
 echo    (программа не зависла, а распаковывает игру)
 
 set tempdir_game=temp
-Set url=https://pastebin.com/raw/GQesC1bj
+Set keys_url=https://pastebin.com/raw/GQesC1bj
 Set keys=keys.txt
 
 for /f "delims=" %%i in ("%0") do set "curpath=%%~dpi"
 chdir /d %curpath%
 
 if not exist %tempdir_game% (mkdir %tempdir_game%)
-if not exist %keys% (Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('%url%','%keys%')")
+if not exist %keys% (Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('%keys_url%','%keys%')")
 
 if "%~x1" == ".nsp" (hactool.exe %1 -k keys.txt -x --intype=pfs0 --pfs0dir=%tempdir_game% >nul 2>&1
 ) else (hactool.exe %1 -k keys.txt -txci --securedir=%tempdir_game% >nul 2>&1)
@@ -78,12 +78,36 @@ echo.
 echo ------------------------------------------------------------------------
 echo.
 
+systeminfo | findstr /C:"Windows 10" >nul
+IF ERRORLEVEL 1 (
+
+for /f "delims=" %%i in ("%0") do set "curpath=%%~dpi"
+chdir /d %curpath%
+
+if not exist fciv.exe (
+
+Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('http://customfw.xyz/switch_game_checker/fciv.exe','fciv.exe')
+)
+
 echo Calculating md5, please wait!
 if exist %~n1.md5 (del %~n1.md5)
 fciv -md5 "%1" >> %~n1.md5
 echo|set /p="MD5: "
-tail -1 %~n1.md5
+for /f "skip=1" %%a in (%~n1.md5) do echo %%a >> 1.txt
+tail -1 1.txt
+del 1.txt
 echo.
+
+) else  (
+
+echo Calculating md5, please wait!
+if exist %~n1.md5 (del %~n1.md5)
+certUtil -hashfile "%1" md5 >> %~n1.md5
+echo|set /p="MD5: "
+tail -2 %~n1.md5 | head -1
+echo.
+
+	)
 )
 
 :end
