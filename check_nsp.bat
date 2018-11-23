@@ -77,11 +77,12 @@ echo              %~n1 IS GOOD
 echo.
 echo ------------------------------------------------------------------------
 echo.
+
 echo Calculating md5, please wait!
 if exist %~n1.md5 (del %~n1.md5)
-certUtil -hashfile "%1" md5 >> %~n1.md5
+fciv -md5 "%1" >> %~n1.md5
 echo|set /p="MD5: "
-tail -2 %~n1.md5 | head -1
+tail -1 %~n1.md5
 echo.
 )
 
