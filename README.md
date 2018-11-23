@@ -1,3 +1,7 @@
+Russian special version. Viva la свобода информации, blyat'!
+
+http://switch.customfw.xyz
+
 ## Instruction
 
 1. Download [hactool](https://github.com/SciresM/hactool/releases/latest)
