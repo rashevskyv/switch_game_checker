@@ -9,6 +9,7 @@ Russian-language guide for everything - http://switch.customfw.xyz
 1. Download [hactool](https://github.com/SciresM/hactool/releases/latest) or buil it yourself (you can download 1.2.2 for macOS from [releases](https://github.com/rashevskyv/switch_game_checker/releases/latest) on this repository)
 1. Place files from zip of **hactool** to script folder
 1. Drag and drop game file to 'check_nsp.bat'
+1. Delete keys with errors in `keys.txt`
 
 !!! Rename game only with latin symbols and numbers!
 
@@ -21,5 +22,6 @@ ____
 1. Скачайте [hactool](https://github.com/SciresM/hactool/releases/latest) или соберите сами (версию для macOS можно скачать в [релизах](https://github.com/rashevskyv/switch_game_checker/releases/latest) этого репозитория
 1. Положите файлы из архива с **hactool** в папку со скриптом
 1. Перетяните игру для Switch на скрипт
+1. Удалите ключи, которые будут вызывать ошибки из `keys.txt`
 
 !!! Название игры должно состоять только из символов латиницы и цифр!
