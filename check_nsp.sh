@@ -22,13 +22,8 @@ if [ ! -f ./hactool ]; then
 fi
 
 if [ ! -f $KEYS ]; then
-    echo
-    echo
-    echo No $KEYS file found!
-    echo Get your keys first! Use kezplez on Switch or google it! 
-    echo
-    echo
-    exit 1
+    echo Downloading keys...
+    wget -O $KEYS $KEYS_URL &> /dev/null
 fi
 
 if [ ! -d $TEMP_DIR ]; then
