@@ -7,7 +7,7 @@ KEYS_URL=https://pastebin.com/raw/GQesC1bj
 KEYS=keys.txt
 FILE_EXTENSION="${1##*.}"
 CHECK_LOG=check.log
-BASE_NAME=$(basename $1)
+BASE_NAME=$(basename "$1")
 
 pushd $SCRIPT_DIR &> /dev/null
 
@@ -84,8 +84,11 @@ fi
 
 echo -n Calculating md5...
 echo -en "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
-echo MD5: $(md5 -q "$1")
-echo
+if ! type "md5sum" &> /dev/null; then
+    echo MD5: $(md5 -q "$1")
+else
+    echo MD5: $(md5sum "$1")
+fi
 
 printf "$DEFAULT_COLOR"
 
