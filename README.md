@@ -10,6 +10,7 @@ Russian-language guide for everything - http://switch.customfw.xyz
 1. Place files from zip of **hactool** to script folder
 1. Drag and drop game file to 'check_nsp.bat'
 1. Delete keys with errors in `keys.txt`
+  * *On unix-like systems:* if you got an error on the unpacking, probably you dont have execution-bit on thу hactool. Do `chmod u+x hactool`
 
 !!! Rename game only with latin symbols and numbers!
 
@@ -23,5 +24,6 @@ ____
 1. Положите файлы из архива с **hactool** в папку со скриптом
 1. Перетяните игру для Switch на скрипт
 1. Удалите ключи, которые будут вызывать ошибки из `keys.txt`
+  * *Для пользователей unix-like систем:* при возникновении ошибки на этапе распаковки, убедитесь, что для hactool взведен execution-бит, или просто сделайте `chmod u+x hactool`
 
 !!! Название игры должно состоять только из символов латиницы и цифр!
