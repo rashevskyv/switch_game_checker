@@ -21,7 +21,31 @@ if not exist %tempdir_game% (mkdir %tempdir_game%)
 if not exist %keys% (Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('%keys_url%','%keys%')")
 
 if "%~x1" == ".nsp" (hactool.exe %1 -k keys.txt -x --intype=pfs0 --pfs0dir=%tempdir_game% >nul 2>&1
-) else (hactool.exe %1 -k keys.txt -txci --securedir=%tempdir_game% >nul 2>&1)
+) else (if "%~x1" == ".xci" (hactool.exe %1 -k keys.txt -txci --securedir=%tempdir_game% >nul 2>&1)
+else (
+
+cls
+echo %~n1%~x1:
+echo.
+echo ------------------------------------------------------------------------
+echo.
+COLOR 4
+echo                           WRONG FILE TYPE!
+echo.
+echo              script works only with XCI and NSP files!
+echo.
+echo ------------------------------------------------------------------------
+echo.
+echo                         ”€‰‹ …‚…ŽƒŽ ’ˆ€!
+echo.
+echo             áªà¨¯â à ¡®â ¥â â®«ìª® á XCI ¨ NSP ä ©« ¬¨!
+echo.
+echo ------------------------------------------------------------------------
+echo.
+
+goto :end
+	)
+)
 
 echo    - DONE
 echo.
@@ -30,6 +54,7 @@ dir %tempdir_game% /s/a-d >nul
 IF ERRORLEVEL 1 (
 
 cls
+echo %~n1%~x1:
 echo.
 echo ------------------------------------------------------------------------
 echo.
@@ -37,7 +62,7 @@ COLOR 4
 echo                           SOMETHING GONE WRONG!
 echo.
 echo           file is not Switch game or contain forbidden symbols
-echo      rename your game file to simple name without , ' [ ] or others
+echo        rename your game file only with latin symbols and numbers!
 echo.
 echo ------------------------------------------------------------------------
 echo.
@@ -67,6 +92,8 @@ COLOR 4
 echo              %~n1 IS CORRUPTED!
 echo.
 echo ------------------------------------------------------------------------
+set filename=BAD_%~n1
+
 ) ELSE (
 cls
 echo.
@@ -77,6 +104,9 @@ echo              %~n1 IS GOOD
 echo.
 echo ------------------------------------------------------------------------
 echo.
+set filename=GOOD_%~n1
+
+)
 
 systeminfo | findstr /C:"Windows 10" >nul
 IF ERRORLEVEL 1 (
@@ -102,12 +132,10 @@ echo.
 
 echo Calculating md5, please wait!
 if exist %~n1.md5 (del %~n1.md5)
-certUtil -hashfile "%1" md5 >> %~n1.md5
+certUtil -hashfile "%1" md5 >> %filename%.md5
 echo|set /p="MD5: "
-tail -2 %~n1.md5 | head -1
+tail -2 %filename%.md5 | head -1
 echo.
-
-	)
 )
 
 :end
