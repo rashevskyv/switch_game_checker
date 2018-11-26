@@ -1,4 +1,5 @@
 @echo off
+chcp 1251 >nul
 
 echo ------------------------------------------------------------------------
 echo.
@@ -25,6 +26,7 @@ exit
 echo * Unpacking of %~n1, please wait!
 echo    - Programm is not freezing. Be patient!
 echo    (программа не зависла, а распаковывает игру)
+echo    (игнорируйте [WARN])
 
 if not exist %tempdir_game% (mkdir %tempdir_game%)
 
