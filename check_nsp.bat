@@ -24,9 +24,8 @@ echo * Unpacking of %~nx1, please wait!
 echo    - Programm is not freezing. Be patient!
 
 ::looking for filetype
-if "%~x1" == ".nsp" (hactool.exe "%1" -k keys.txt -x --intype=pfs0 --pfs0dir=%tempdir_game% >"%~n1.errorlog") else (
-if "%~x1" == ".xci" (hactool.exe "%1" -txci --securedir=%tempdir_game% >"%~n1.errorlog) else (
-
+if "%~x1" == ".nsp" (hactool.exe %1 -k keys.txt -x --intype=pfs0 --pfs0dir=%tempdir_game% >%~n1.errorlog) else (
+if "%~x1" == ".xci" (hactool.exe %1 -txci --securedir=%tempdir_game% >%~n1.errorlog) else (
 cls
 echo %~nx1:
 echo.
@@ -41,8 +40,7 @@ echo ------------------------------------------------------------------------
 echo.
 
 goto :end
-)
-)
+))
 
 echo    - DONE
 echo.
@@ -60,7 +58,7 @@ COLOR 4
 echo                           SOMETHING GONE WRONG!
 echo.
 echo           file is not Switch game or contain forbidden symbols
-echo        rename your game file only with latin symbols and numbers!
+echo        rename your game file only with latin letters and numbers!
 echo.
 echo ------------------------------------------------------------------------
 echo.
