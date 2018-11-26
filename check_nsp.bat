@@ -7,10 +7,12 @@ echo.
 echo ------------------------------------------------------------------------
 echo.
 
+::search for script-path
+for /f "delims=" %%i in ("%0") do set "curpath=%%~dpi"
+chdir /d %curpath%
 set tempdir_game=temp
 
 if not exist hactool.exe (
-
 echo ---------------------------------------------------------------------------
 echo.
 COLOR 4
@@ -23,10 +25,9 @@ echo Download hactool here: https://github.com/SciresM/hactool/releases/latest
 echo.
 echo ---------------------------------------------------------------------------
 echo.
-
-goto :end
+pause
+exit
 )
-
 
 ::check keys
 if not exist keys.txt (
@@ -39,10 +40,6 @@ echo.
 pause
 exit
 )
-
-::search for script-path
-for /f "delims=" %%i in ("%0") do set "curpath=%%~dpi"
-chdir /d %curpath%
 
 ::make temp directory
 if not exist %tempdir_game% (mkdir %tempdir_game%)
