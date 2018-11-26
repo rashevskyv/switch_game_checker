@@ -1,4 +1,4 @@
-﻿@echo off
+@echo off
 
 echo ------------------------------------------------------------------------
 echo.
@@ -7,8 +7,9 @@ echo.
 echo ------------------------------------------------------------------------
 echo.
 
-::downloading keys
 set tempdir_game=temp
+
+::downloading keys
 Set keys_url=https://pastebin.com/raw/GQesC1bj
 Set keys=keys.txt
 
@@ -21,8 +22,6 @@ if not exist %tempdir_game% (mkdir %tempdir_game%)
 
 echo * Unpacking of %~nx1, please wait!
 echo    - Programm is not freezing. Be patient!
-echo      (программа не зависла, а распаковывает игру,
-echo       если увидите [WARN] - игнорируйте)
 
 ::looking for filetype
 if "%~x1" == ".nsp" (hactool.exe "%1" -k keys.txt -x --intype=pfs0 --pfs0dir=%tempdir_game% >"%~n1.errorlog") else (
@@ -37,12 +36,6 @@ COLOR 4
 echo                           WRONG FILE TYPE!
 echo.
 echo              script works only with XCI and NSP files!
-echo.
-echo ------------------------------------------------------------------------
-echo.
-echo                         ФАЙЛ НЕВЕРНОГО ТИПА!
-echo.
-echo             скрипт работает только с XCI и NSP файлами!
 echo.
 echo ------------------------------------------------------------------------
 echo.
@@ -71,14 +64,6 @@ echo        rename your game file only with latin symbols and numbers!
 echo.
 echo ------------------------------------------------------------------------
 echo.
-echo                            ЧТО-ТО ПОШЛО НЕ ТАК!
-echo.
-echo     файл не является игрой на Switch или содержит запрещённые символы
-echo                  переименуйте игру так, чтобы она содержала
-echo                     только латинские символы и цифры!
-echo.
-echo ------------------------------------------------------------------------
-echo.
 
 goto :end
 )
@@ -88,8 +73,6 @@ goto :end
 
 echo * Checking of %nca_file%, please wait!
 echo    - Programm is not freezing. Be patient!
-echo      (программа не зависла, а распаковывает игру,
-echo       если увидите [WARN] - игнорируйте)
 
 ::verify biggest nca
 hactool.exe -k keys.txt -y %tempdir_game%/%nca_file% >>check.log
@@ -143,8 +126,7 @@ Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('http://
 )
 
 echo Calculating md5, please wait!
-if exist %filename%.md5 (del %filename%.md5)
-fciv -md5 "%1" >> %filename%.md5
+fciv -md5 "%1" > %filename%.md5
 echo|set /p="MD5: "
 for /f "skip=1" %%a in (%filename%.md5) do echo %%a >> 1.txt
 tail -1 1.txt
@@ -154,8 +136,7 @@ echo.
 ) else  (
 
 echo Calculating md5, please wait!
-if exist %filename%.md5 (del %filename%.md5)
-certUtil -hashfile "%1" md5 >> %filename%.md5
+certUtil -hashfile "%1" md5 > %filename%.md5
 echo|set /p="MD5: "
 tail -2 %filename%.md5 | head -1
 echo.
