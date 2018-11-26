@@ -134,8 +134,7 @@ Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('http://
 )
 
 echo Calculating md5, please wait!
-if exist %filename%.md5 (del %filename%.md5)
-fciv -md5 "%1" >> %filename%.md5
+fciv -md5 "%1" > %filename%.md5
 echo|set /p="MD5: "
 for /f "skip=1" %%a in (%filename%.md5) do echo %%a >> 1.txt
 tail -1 1.txt
@@ -145,8 +144,7 @@ echo.
 ) else  (
 
 echo Calculating md5, please wait!
-if exist %filename%.md5 (del %filename%.md5)
-certUtil -hashfile "%1" md5 >> %filename%.md5
+certUtil -hashfile "%1" md5 > %filename%.md5
 echo|set /p="MD5: "
 tail -2 %filename%.md5 | head -1
 echo.
