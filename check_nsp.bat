@@ -6,50 +6,55 @@ echo        %~n1
 echo.
 echo ------------------------------------------------------------------------
 
-echo * Unpacking of %~n1, please wait!
-echo    - Programm is not freezing. Be patient!
-echo    (программа не зависла, а распаковывает игру)
-
+::downloading keys
 set tempdir_game=temp
 Set keys_url=https://pastebin.com/raw/GQesC1bj
 Set keys=keys.txt
 
+if not exist %keys% (Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('%keys_url%','%keys%')")
+
+::search for script-path
 for /f "delims=" %%i in ("%0") do set "curpath=%%~dpi"
 chdir /d %curpath%
 
+::make temp directory
 if not exist %tempdir_game% (mkdir %tempdir_game%)
-if not exist %keys% (Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('%keys_url%','%keys%')")
 
+echo * Unpacking of %~n1, please wait!
+echo    - Programm is not freezing. Be patient!
+echo    (программа не зависла, а распаковывает игру)
+
+::looking for filetype
 if "%~x1" == ".nsp" (hactool.exe %1 -k keys.txt -x --intype=pfs0 --pfs0dir=%tempdir_game% >nul 2>&1
-) else (if "%~x1" == ".xci" (hactool.exe %1 -k keys.txt -txci --securedir=%tempdir_game% >nul 2>&1)
-else (
-
-cls
-echo %~n1%~x1:
-echo.
-echo ------------------------------------------------------------------------
-echo.
-COLOR 4
-echo                           WRONG FILE TYPE!
-echo.
-echo              script works only with XCI and NSP files!
-echo.
-echo ------------------------------------------------------------------------
-echo.
-echo                         ФАЙЛ НЕВЕРНОГО ТИПА!
-echo.
-echo             скрипт работает только с XCI и NSP файлами!
-echo.
-echo ------------------------------------------------------------------------
-echo.
-
-goto :end
-	)
-)
+) else (hactool.exe %1 -k keys.txt -txci --securedir=%tempdir_game% >nul 2>&1)
 
 echo    - DONE
 echo.
 
+REM cls
+REM echo %~n1%~x1:
+REM echo.
+REM echo ------------------------------------------------------------------------
+REM echo.
+REM COLOR 4
+REM echo                           WRONG FILE TYPE!
+REM echo.
+REM echo              script works only with XCI and NSP files!
+REM echo.
+REM echo ------------------------------------------------------------------------
+REM echo.
+REM echo                         ФАЙЛ НЕВЕРНОГО ТИПА!
+REM echo.
+REM echo             скрипт работает только с XCI и NSP файлами!
+REM echo.
+REM echo ------------------------------------------------------------------------
+REM echo.
+
+REM goto :end
+	REM )
+REM )
+
+::looking for ncas in tempdir
 dir %tempdir_game% /s/a-d >nul
 IF ERRORLEVEL 1 (
 
@@ -78,10 +83,13 @@ echo.
 goto :end
 )
 
+::looking for biggest nca
 (for /f "delims=" %%i in ('dir %tempdir_game% /b /os') do set nca_file=%%~nxi)>nul
 
+::verify biggest nca
 hactool.exe -k keys.txt -y %tempdir_game%/%nca_file% >>check.log
 
+::check log for result
 findstr  /i /c:"Fixed-Key Signature (GOOD)" check.log>NUL
 IF ERRORLEVEL 1 (
 cls
@@ -108,12 +116,15 @@ set filename=GOOD_%~n1
 
 )
 
+::md5 stuff
+
+::check windows version
 systeminfo | findstr /C:"Windows 10" >nul
 IF ERRORLEVEL 1 (
 
-for /f "delims=" %%i in ("%0") do set "curpath=%%~dpi"
 chdir /d %curpath%
 
+::check for fciv in win<10
 if not exist fciv.exe (
 
 Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('http://customfw.xyz/switch_game_checker/fciv.exe','fciv.exe')
@@ -138,6 +149,7 @@ tail -2 %filename%.md5 | head -1
 echo.
 )
 
+::remove tempfiles and end
 :end
 rmdir /Q /S %tempdir_game% >nul 2>&1
 del /q check.log >nul 2>&1
