@@ -9,6 +9,25 @@ echo.
 
 set tempdir_game=temp
 
+if not exist hactool.exe (
+
+echo ---------------------------------------------------------------------------
+echo.
+COLOR 4
+echo                     hactool.exe DID NOT FOUND!
+echo.
+echo       please poot hactool.exe in the same folder with this script
+echo                        and run script again!
+echo.
+echo Download hactool here: https://github.com/SciresM/hactool/releases/latest
+echo.
+echo ---------------------------------------------------------------------------
+echo.
+
+goto :end
+)
+
+
 ::check keys
 if not exist keys.txt (
 COLOR 4
