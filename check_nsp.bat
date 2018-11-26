@@ -1,4 +1,4 @@
-rem @echo off
+@echo off
 
 echo ------------------------------------------------------------------------
 echo.
@@ -11,8 +11,6 @@ echo.
 set tempdir_game=temp
 Set keys_url=https://pastebin.com/raw/GQesC1bj
 Set keys=keys.txt
-
-if not exist %keys% (Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('%keys_url%','%keys%'))"
 
 ::search for script-path
 for /f "delims=" %%i in ("%0") do set "curpath=%%~dpi"
