@@ -1,5 +1,4 @@
 @echo off
-chcp 1251 >nul
 
 echo ------------------------------------------------------------------------
 echo.
@@ -7,6 +6,8 @@ echo        %~nx1
 echo.
 echo ------------------------------------------------------------------------
 echo.
+
+set tempdir_game=temp
 
 ::check keys
 if not exist keys.txt (
@@ -29,8 +30,6 @@ if not exist %tempdir_game% (mkdir %tempdir_game%)
 
 echo * Unpacking of %~nx1, please wait!
 echo    - Programm is not freezing. Be patient!
-echo      (?a®?a ¬¬  ­? § ??a« ,   a a? ?®?e? ?a ??aa,
-echo       ?a«? a??¤?a? [WARN] - ??­®a?aa©a?)
 
 ::looking for filetype
 if "%~x1" == ".nsp" (hactool.exe %1 -k keys.txt -x --intype=pfs0 --pfs0dir=%tempdir_game% >%~n1.errorlog) else (
@@ -45,12 +44,6 @@ COLOR 4
 echo                           WRONG FILE TYPE!
 echo.
 echo              script works only with XCI and NSP files!
-echo.
-echo ------------------------------------------------------------------------
-echo.
-echo                         ”ˆ‰‹ ?…‚…??Z?Z ’??ˆ!
-echo.
-echo             a?a??a a ?®a ?a a®«i?® a XCI ? NSP a ©« ¬?!
 echo.
 echo ------------------------------------------------------------------------
 echo.
@@ -79,14 +72,6 @@ echo        rename your game file only with latin symbols and numbers!
 echo.
 echo ------------------------------------------------------------------------
 echo.
-echo                            —’Z-’Z ?Z?‹Z ?… ’ˆS!
-echo.
-echo     a ©« ­? i?«i?aai ??a®© ­  Switch ?«? a®¤?a¦?a § ?a?en­­e? a?¬?®«e
-echo                  ??a??¬?­a©a? ??aa a ?, ca®?e ®­  a®¤?a¦ « 
-echo                     a®«i?® « a?­a??? a?¬?®«e ? ??aae!
-echo.
-echo ------------------------------------------------------------------------
-echo.
 
 goto :end
 )
@@ -96,8 +81,6 @@ goto :end
 
 echo * Checking of %nca_file%, please wait!
 echo    - Programm is not freezing. Be patient!
-echo      (?a®?a ¬¬  ­? § ??a« ,   a a? ?®?e? ?a ??aa,
-echo       ?a«? a??¤?a? [WARN] - ??­®a?aa©a?)
 
 ::verify biggest nca
 hactool.exe -k keys.txt -y %tempdir_game%/%nca_file% >>check.log
