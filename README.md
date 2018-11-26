@@ -9,7 +9,7 @@ http://switch.customfw.xyz
 1. Drag and drop game file to 'check_nsp.bat'
   * *On unix-like systems:* if you got an error on the unpacking, probably you dont have execution-bit on thу hactool. Do `chmod u+x hactool`
 
-!!! Rename game only with latin symbols and numbers!
+!!! Rename game only with latin letters and numbers!
 
 ____
 
@@ -19,4 +19,4 @@ ____
 1. Перетяните игру для Switch на скрипт
   * *Для пользователей unix-like систем:* при возникновении ошибки на этапе распаковки, убедитесь, что для hactool взведен execution-бит, или просто сделайте `chmod u+x hactool`
 
-!!! Название игры должно состоять только из символов латиницы и цифр!
+!!! Название игры должно состоять только из букв латиницы и цифр!

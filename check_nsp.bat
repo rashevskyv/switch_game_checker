@@ -2,9 +2,10 @@
 
 echo ------------------------------------------------------------------------
 echo.
-echo        %~n1
+echo        %~nx1
 echo.
 echo ------------------------------------------------------------------------
+echo.
 
 ::downloading keys
 set tempdir_game=temp
@@ -20,46 +21,47 @@ chdir /d %curpath%
 ::make temp directory
 if not exist %tempdir_game% (mkdir %tempdir_game%)
 
-echo * Unpacking of %~n1, please wait!
+echo * Unpacking of %~nx1, please wait!
 echo    - Programm is not freezing. Be patient!
-echo    (программа не зависла, а распаковывает игру)
+echo      (программа не зависла, а распаковывает игру,
+echo       если увидите [WARN] - игнорируйте)
 
 ::looking for filetype
-if "%~x1" == ".nsp" (hactool.exe %1 -k keys.txt -x --intype=pfs0 --pfs0dir=%tempdir_game% >nul 2>&1
-) else (hactool.exe %1 -k keys.txt -txci --securedir=%tempdir_game% >nul 2>&1)
+if "%~x1" == ".nsp" (hactool.exe %1 -k keys.txt -x --intype=pfs0 --pfs0dir=%tempdir_game% >%~n1.errorlog) else (
+if "%~x1" == ".xci" (hactool.exe %1 -txci --securedir=%tempdir_game% >%~n1.errorlog) else (
+
+cls
+echo %~nx1:
+echo.
+echo ------------------------------------------------------------------------
+echo.
+COLOR 4
+echo                           WRONG FILE TYPE!
+echo.
+echo              script works only with XCI and NSP files!
+echo.
+echo ------------------------------------------------------------------------
+echo.
+echo                         ФАЙЛ НЕВЕРНОГО ТИПА!
+echo.
+echo             скрипт работает только с XCI и NSP файлами!
+echo.
+echo ------------------------------------------------------------------------
+echo.
+
+goto :end
+)
+)
 
 echo    - DONE
 echo.
-
-REM cls
-REM echo %~n1%~x1:
-REM echo.
-REM echo ------------------------------------------------------------------------
-REM echo.
-REM COLOR 4
-REM echo                           WRONG FILE TYPE!
-REM echo.
-REM echo              script works only with XCI and NSP files!
-REM echo.
-REM echo ------------------------------------------------------------------------
-REM echo.
-REM echo                         ФАЙЛ НЕВЕРНОГО ТИПА!
-REM echo.
-REM echo             скрипт работает только с XCI и NSP файлами!
-REM echo.
-REM echo ------------------------------------------------------------------------
-REM echo.
-
-REM goto :end
-	REM )
-REM )
 
 ::looking for ncas in tempdir
 dir %tempdir_game% /s/a-d >nul
 IF ERRORLEVEL 1 (
 
 cls
-echo %~n1%~x1:
+echo %~nx1:
 echo.
 echo ------------------------------------------------------------------------
 echo.
@@ -86,8 +88,15 @@ goto :end
 ::looking for biggest nca
 (for /f "delims=" %%i in ('dir %tempdir_game% /b /os') do set nca_file=%%~nxi)>nul
 
+echo * Checking of %nca_file%, please wait!
+echo    - Programm is not freezing. Be patient!
+echo      (программа не зависла, а распаковывает игру,
+echo       если увидите [WARN] - игнорируйте)
+
 ::verify biggest nca
 hactool.exe -k keys.txt -y %tempdir_game%/%nca_file% >>check.log
+echo    - DONE
+echo.
 
 ::check log for result
 findstr  /i /c:"Fixed-Key Signature (GOOD)" check.log>NUL
@@ -97,10 +106,11 @@ echo.
 echo ------------------------------------------------------------------------
 echo.
 COLOR 4
-echo              %~n1 IS CORRUPTED!
+echo              %~nx1 IS CORRUPTED!
 echo.
 echo ------------------------------------------------------------------------
-set filename=BAD_%~n1
+set filename=md5/BAD_%~nx1
+del /q %~n1.errorlog >nul 2>&1
 
 ) ELSE (
 cls
@@ -108,18 +118,22 @@ echo.
 echo ------------------------------------------------------------------------
 echo.
 COLOR 2
-echo              %~n1 IS GOOD
+echo              %~nx1 IS GOOD
 echo.
 echo ------------------------------------------------------------------------
 echo.
-set filename=GOOD_%~n1
+set filename=md5/GOOD_%~nx1
+del /q %~n1.errorlog >nul 2>&1
 
 )
 
 ::md5 stuff
 
+if not exist md5 (mkdir md5)
+
+
 ::check windows version
-systeminfo | findstr /C:"Windows 10" >nul
+systeminfo | findstr /C:"Windows 10" /C:"Windows 8" >nul
 IF ERRORLEVEL 1 (
 
 chdir /d %curpath%
