@@ -7,15 +7,38 @@ echo.
 echo ------------------------------------------------------------------------
 echo.
 
+::search for script-path
+for /f "delims=" %%i in ("%0") do set "curpath=%%~dpi"
+chdir /d %curpath%
 set tempdir_game=temp
+
+if not exist hactool.exe (
+echo ---------------------------------------------------------------------------
+echo.
+COLOR 4
+echo                     hactool.exe DID NOT FOUND!
+echo.
+echo       please poot hactool.exe in the same folder with this script
+echo                        and run script again!
+echo.
+echo Download hactool here: https://github.com/SciresM/hactool/releases/latest
+echo.
+echo ---------------------------------------------------------------------------
+echo.
+pause
+exit
+)
 
 ::downloading keys
 Set keys_url=https://pastebin.com/raw/GQesC1bj
 Set keys=keys.txt
-
-::search for script-path
-for /f "delims=" %%i in ("%0") do set "curpath=%%~dpi"
-chdir /d %curpath%
+if not exist %keys% (
+echo * No keys.txt founded
+echo    - Downloading
+Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('%keys_url%','%keys%')"
+echo    - DONE
+echo.
+)
 
 ::make temp directory
 if not exist %tempdir_game% (mkdir %tempdir_game%)
@@ -119,8 +142,11 @@ chdir /d %curpath%
 
 ::check for fciv in win<10
 if not exist fciv.exe (
-
+echo * Need fciv.exe for calculating md5
+echo    - Downloading
 Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('http://customfw.xyz/switch_game_checker/fciv.exe','fciv.exe')
+echo    - DONE
+echo.
 )
 
 echo Calculating md5, please wait!
