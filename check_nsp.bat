@@ -1,4 +1,4 @@
-@echo off
+rem @echo off
 
 echo ------------------------------------------------------------------------
 echo.
@@ -12,7 +12,7 @@ set tempdir_game=temp
 Set keys_url=https://pastebin.com/raw/GQesC1bj
 Set keys=keys.txt
 
-if not exist %keys% (Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('%keys_url%','%keys%')")
+if not exist %keys% (Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('%keys_url%','%keys%'))"
 
 ::search for script-path
 for /f "delims=" %%i in ("%0") do set "curpath=%%~dpi"
@@ -27,8 +27,8 @@ echo      (программа не зависла, а распаковывает игру,
 echo       если увидите [WARN] - игнорируйте)
 
 ::looking for filetype
-if "%~x1" == ".nsp" (hactool.exe %1 -k keys.txt -x --intype=pfs0 --pfs0dir=%tempdir_game% >%~n1.errorlog) else (
-if "%~x1" == ".xci" (hactool.exe %1 -txci --securedir=%tempdir_game% >%~n1.errorlog) else (
+if "%~x1" == ".nsp" (hactool.exe "%1" -k keys.txt -x --intype=pfs0 --pfs0dir=%tempdir_game% >"%~n1.errorlog") else (
+if "%~x1" == ".xci" (hactool.exe "%1" -txci --securedir=%tempdir_game% >"%~n1.errorlog) else (
 
 cls
 echo %~nx1:
