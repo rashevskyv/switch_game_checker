@@ -12,6 +12,11 @@ for /f "delims=" %%i in ("%0") do set "curpath=%%~dpi"
 chdir /d %curpath%
 set tempdir_game=temp
 
+::remove file from previous iteration
+rmdir /Q /S %tempdir_game% >nul 2>&1
+del /q check.log >nul 2>&1
+
+
 if not exist hactool.exe (
 echo ---------------------------------------------------------------------------
 echo.
