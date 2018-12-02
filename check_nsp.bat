@@ -1,8 +1,24 @@
 @echo off
 
+echo Drag and Drop here your GAME NSP, then press Enter: 
+set /p game=""
+
+For /F "tokens=* delims=" %%A In (%game%) Do (
+
+    Set gamepath=%%~dpA
+    Set gamenametype=%%~nxA
+	Set gametype=%%~xA
+	Set gamename=%%~nA
+	Set gameshort=%%~sA
+)
+
+
+SET str=%gamename%
+set errorf=%str: =%
+
 echo ------------------------------------------------------------------------
 echo.
-echo        %~nx1
+echo        %gamenametype%
 echo.
 echo ------------------------------------------------------------------------
 echo.
@@ -49,15 +65,17 @@ exit
 ::make temp directory
 if not exist %tempdir_game% (mkdir %tempdir_game%)
 
-echo * Unpacking of %~nx1, please wait!
+echo * Unpacking of %gamenametype%, please wait!
 echo    - Programm is not freezing. Be patient!
 
 ::looking for filetype
-if "%~x1" == ".nsp" (hactool.exe %1 -k keys.txt -x --intype=pfs0 --pfs0dir=%tempdir_game% >%~n1.errorlog) else (
-if "%~x1" == ".xci" (hactool.exe %1 -txci --securedir=%tempdir_game% >%~n1.errorlog) else (
+chdir /d %curpath%
+if "%gametype%" == ".nsp" (hactool.exe %game% -k keys.txt -x --intype=pfs0 --pfs0dir=%tempdir_game% >%errorf%.errorlog) else (
+if "%gametype%" == ".xci" (hactool.exe %game% -txci --securedir=%tempdir_game% >%errorf%.errorlog) else (
+
 
 cls
-echo %~nx1:
+echo %gamenametype%:
 echo.
 echo ------------------------------------------------------------------------
 echo.
@@ -81,7 +99,7 @@ dir %tempdir_game% /s/a-d >nul
 IF ERRORLEVEL 1 (
 
 cls
-echo %~nx1:
+echo %gamenametype%:
 echo.
 echo ------------------------------------------------------------------------
 echo.
@@ -116,11 +134,11 @@ echo.
 echo ------------------------------------------------------------------------
 echo.
 COLOR 4
-echo              %~nx1 IS CORRUPTED!
+echo              %gamenametype% IS CORRUPTED!
 echo.
 echo ------------------------------------------------------------------------
-set filename=md5/BAD_%~nx1
-del /q %~n1.errorlog >nul 2>&1
+set filename=md5/BAD_%errorf%
+del /q %errorf%.errorlog >nul 2>&1
 
 ) ELSE (
 cls
@@ -128,12 +146,12 @@ echo.
 echo ------------------------------------------------------------------------
 echo.
 COLOR 2
-echo              %~nx1 IS GOOD
+echo              %gamenametype% IS GOOD
 echo.
 echo ------------------------------------------------------------------------
 echo.
-set filename=md5/GOOD_%~nx1
-del /q %~n1.errorlog >nul 2>&1
+set filename=md5/GOOD_%errorf%
+del /q %errorf%.errorlog >nul 2>&1
 
 )
 
@@ -143,7 +161,7 @@ if not exist md5 (mkdir md5)
 
 
 ::check windows version
-systeminfo | findstr /C:"Windows 10" /C:"Windows 8" >nul
+systeminfo | findstr /C:"Windows 8" /C:"Windows 10" >nul
 IF ERRORLEVEL 1 (
 
 chdir /d %curpath%
@@ -155,7 +173,7 @@ Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('http://
 )
 
 echo Calculating md5, please wait!
-fciv -md5 "%1" > %filename%.md5
+fciv -md5 %game% > %filename%.md5
 echo|set /p="MD5: "
 for /f "skip=1" %%a in (%filename%.md5) do echo %%a >> 1.txt
 tail -1 1.txt
@@ -165,7 +183,7 @@ echo.
 ) else  (
 
 echo Calculating md5, please wait!
-certUtil -hashfile "%1" md5 > %filename%.md5
+certUtil -hashfile %game% md5 > %filename%.md5
 echo|set /p="MD5: "
 tail -2 %filename%.md5 | head -1
 echo.
