@@ -2,19 +2,29 @@
 
 echo Drag and Drop here your GAME NSP, then press Enter: 
 set /p game=""
+echo %game% > temp.log
 
-For /F "tokens=* delims=" %%A In (%game%) Do (
+::search for script-path
+for /f "delims=" %%i in ("%0") do set "curpath=%%~dpi"
+chdir /d %curpath%
+set tempdir_game=temp
 
+For /F "tokens=* delims=" %%A In (temp.log) Do (
+
+	Set fullpath=%%~fA
     Set gamepath=%%~dpA
     Set gamenametype=%%~nxA
 	Set gametype=%%~xA
 	Set gamename=%%~nA
-	Set gameshort=%%~sA
+	SET str=%%~nA > temp.log
+	
+	FOR /F "usebackq delims=" %%i IN (temp.log) DO Set "Without=%%i" & Echo !Without: =!)
+	set errorf=%str: =%
+	
+	echo %errorf% > temp.log
+	tail -1 temp.log > %errorf% >nul 2>&1
+	
 )
-
-
-SET str=%gamename%
-set errorf=%str: =%
 
 echo ------------------------------------------------------------------------
 echo.
@@ -22,11 +32,6 @@ echo        %gamenametype%
 echo.
 echo ------------------------------------------------------------------------
 echo.
-
-::search for script-path
-for /f "delims=" %%i in ("%0") do set "curpath=%%~dpi"
-chdir /d %curpath%
-set tempdir_game=temp
 
 ::remove file from previous iteration
 rmdir /Q /S %tempdir_game% >nul 2>&1
@@ -161,7 +166,7 @@ if not exist md5 (mkdir md5)
 
 
 ::check windows version
-systeminfo | findstr /C:"Windows 8" /C:"Windows 10" >nul
+systeminfo | findstr /C:"Windows 7" /C:"Windows 7" >nul
 IF ERRORLEVEL 1 (
 
 chdir /d %curpath%
@@ -175,9 +180,9 @@ Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('http://
 echo Calculating md5, please wait!
 fciv -md5 %game% > %filename%.md5
 echo|set /p="MD5: "
-for /f "skip=1" %%a in (%filename%.md5) do echo %%a >> 1.txt
-tail -1 1.txt
-del 1.txt
+for /f "skip=1" %%a in (%filename%.md5) do echo %%a >> temp.log
+tail -1 temp.log
+del temp.log
 echo.
 
 ) else  (
