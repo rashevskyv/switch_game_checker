@@ -1,4 +1,4 @@
-@echo off
+REM @echo off
 
 echo Drag and Drop here your GAME NSP, then press Enter: 
 set /p game=""
@@ -9,6 +9,8 @@ for /f "delims=" %%i in ("%0") do set "curpath=%%~dpi"
 chdir /d %curpath%
 set tempdir_game=temp
 
+
+::set vars, delete spaces and comas from filename. There is fuckng dirty code. I do not know how and why it work O_O
 For /F "tokens=* delims=" %%A In (temp.log) Do (
 
 	Set fullpath=%%~fA
@@ -16,15 +18,16 @@ For /F "tokens=* delims=" %%A In (temp.log) Do (
     Set gamenametype=%%~nxA
 	Set gametype=%%~xA
 	Set gamename=%%~nA
-	SET str=%%~nA > temp.log
-	
-	FOR /F "usebackq delims=" %%i IN (temp.log) DO Set "Without=%%i" & Echo !Without: =!)
-	set errorf=%str: =%
-	
-	echo %errorf% > temp.log
-	tail -1 temp.log > %errorf% >nul 2>&1
-	
+	SET str=%%~nA.errorlog > temp.log
 )
+	FOR /F "usebackq delims=" %%i IN (temp.log) DO (Set "Without=%%i" & Echo !Without: =!)
+	set errorlog=%str: =%
+	set errorlog=%errorlog:,=%
+
+	echo %errorlog% > temp.log
+	tail -1 temp.log > %errorlog% >nul 2>&1
+	
+For /F "tokens=* delims=" %%U In (temp.log) Do (set md5=%%~nU.md5)
 
 echo ------------------------------------------------------------------------
 echo.
@@ -75,8 +78,8 @@ echo    - Programm is not freezing. Be patient!
 
 ::looking for filetype
 chdir /d %curpath%
-if "%gametype%" == ".nsp" (hactool.exe %game% -k keys.txt -x --intype=pfs0 --pfs0dir=%tempdir_game% >%errorf%.errorlog) else (
-if "%gametype%" == ".xci" (hactool.exe %game% -txci --securedir=%tempdir_game% >%errorf%.errorlog) else (
+if "%gametype%" == ".nsp" (hactool.exe %game% -k keys.txt -x --intype=pfs0 --pfs0dir=%tempdir_game% > %errorlog%) else (
+if "%gametype%" == ".xci" (hactool.exe %game% -txci --securedir=%tempdir_game% > %errorlog%) else (
 
 
 cls
@@ -142,8 +145,8 @@ COLOR 4
 echo              %gamenametype% IS CORRUPTED!
 echo.
 echo ------------------------------------------------------------------------
-set filename=md5/BAD_%errorf%
-del /q %errorf%.errorlog >nul 2>&1
+set md5name=md5/BAD_%md5%
+del /q %errorlog% >nul 2>&1
 
 ) ELSE (
 cls
@@ -155,8 +158,8 @@ echo              %gamenametype% IS GOOD
 echo.
 echo ------------------------------------------------------------------------
 echo.
-set filename=md5/GOOD_%errorf%
-del /q %errorf%.errorlog >nul 2>&1
+set md5name=md5/GOOD_%md5%
+del /q %errorlog% >nul 2>&1
 
 )
 
@@ -178,9 +181,9 @@ Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('http://
 )
 
 echo Calculating md5, please wait!
-fciv -md5 %game% > %filename%.md5
+fciv -md5 %game% > %md5name%
 echo|set /p="MD5: "
-for /f "skip=1" %%a in (%filename%.md5) do echo %%a >> temp.log
+for /f "skip=1" %%a in (%md5name%) do echo %%a >> temp.log
 tail -1 temp.log
 del temp.log
 echo.
@@ -188,9 +191,9 @@ echo.
 ) else  (
 
 echo Calculating md5, please wait!
-certUtil -hashfile %game% md5 > %filename%.md5
+certUtil -hashfile %game% md5 > %md5name%
 echo|set /p="MD5: "
-tail -2 %filename%.md5 | head -1
+tail -2 %md5name% | head -1
 echo.
 )
 
