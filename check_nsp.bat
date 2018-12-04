@@ -72,6 +72,7 @@ For /F "tokens=* delims=" %%A In (temp.log) Do (
 	tail -1 temp.log > %errorlog% >nul 2>&1
 	
 For /F "tokens=* delims=" %%U In (temp.log) Do (set md5=%%~nU.md5)
+if exist temp.log (del /q temp.log >nul 2>&1)
 
 ::process names when user dragging game to bat
 echo ------------------------------------------------------------------------
@@ -112,10 +113,11 @@ if not exist keys.txt (
 COLOR 4
 echo.
 echo.
-echo Get your keys first! Use kezplez on Switch or google it!
+echo keys.txt was not found! 
+echo Get your keys first from kezplez on Switch or just google it!
 echo.
 echo.
-pause
+pause >nul 2>&1
 exit
 )
 
@@ -164,7 +166,8 @@ COLOR 4
 echo                           SOMETHING GONE WRONG!
 echo.
 echo           file is not Switch game or contain forbidden symbols
-echo        rename your game file only with latin symbols and numbers!
+echo rename your game file with only latin symbols and numbers without spaces
+echo                              then try again
 echo.
 echo ------------------------------------------------------------------------
 echo.
@@ -191,9 +194,14 @@ echo.
 echo ------------------------------------------------------------------------
 echo.
 COLOR 4
-echo              %gamenametype% IS CORRUPTED!
+echo                      This is a MODIFIED dump!
 echo.
 echo ------------------------------------------------------------------------
+echo.
+echo - Checking of %gamenametype% was FAILED! 
+echo   This is a modified dump! Modified dumps can cause DAMAGE to your console!
+echo   Use it only if it is from a trusted source and you have a NAND and keys backup!
+echo.
 set md5name=md5/BAD_%md5%
 del /q %errorlog% >nul 2>&1
 
@@ -203,9 +211,12 @@ echo.
 echo ------------------------------------------------------------------------
 echo.
 COLOR 2
-echo              %gamenametype% IS GOOD
+echo            This is a CORRECT dump without any modifications
 echo.
 echo ------------------------------------------------------------------------
+echo.
+echo - Checking of %gamenametype% was SUCCESS! 
+echo   You can use it on your console without fear
 echo.
 set md5name=md5/GOOD_%md5%
 del /q %errorlog% >nul 2>&1
@@ -218,7 +229,7 @@ if not exist md5 (mkdir md5)
 
 ::check windows version
 echo Calculating md5, please wait. If you do not need md5, just close the window
-systeminfo | findstr /C:"Windows 8" /C:"Windows 10" >nul
+systeminfo | findstr /C:"Windows 7" /C:"Windows 7" >nul
 IF ERRORLEVEL 1 (
 
 chdir /d %curpath%
@@ -234,7 +245,7 @@ echo.
 echo|set /p="MD5: "
 for /f "skip=1" %%a in (%md5name%) do echo %%a >> temp.log
 tail -1 temp.log
-del temp.log
+if exist temp.log (del /q temp.log >nul 2>&1)
 echo.
 
 ) else  (
@@ -252,21 +263,4 @@ rmdir /Q /S %tempdir_game% >nul 2>&1
 if exist check.log (del /q check.log >nul 2>&1)
 if exist temp.log (del /q temp.log >nul 2>&1)
 echo.
-echo.
-echo.
-echo.
-echo.
-echo.
-echo.
-echo.
-echo.
-echo.
-echo.
-echo.
-echo.
-echo.
-echo.
-echo.
-echo.
-echo.
-pause
+pause >nul 2>&1
