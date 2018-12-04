@@ -85,6 +85,7 @@ echo.
 rmdir /Q /S %tempdir_game% >nul 2>&1
 del /q check.log >nul 2>&1
 if not exist hactool.exe (
+cls
 echo ---------------------------------------------------------------------------
 echo.
 COLOR 4
