@@ -1,12 +1,12 @@
-rem @echo off
-chcp 65001 
+@echo off
+chcp 65001>nul 2>&1
 
 ::search for script-path
 for /f "delims=" %%i in ("%0") do set "curpath=%%~dpi"
 chdir /d %curpath%
 set tempdir_game=temp
 
-del temp.log
+if exist temp.log (del temp.log)
 
 ::process names with exact program launch and dragging game to it
 ::look for argument; coma if two arguments; no_coma if one; launching if script was launched by double click
@@ -20,9 +20,17 @@ if "%~1" neq "" (
 )
 	
 :launching
-echo Drag and Drop here your GAME NSP, then press Enter: 
-set /p game=""
+echo ------------------------------------------------------------------------
+echo.
+echo        Drag and Drop here your GAME NSP, then press Enter
+echo.
+echo ------------------------------------------------------------------------
+echo.
+echo.
+set /p game="Game: "
 echo %game%>temp.log
+echo.
+echo.
 goto :main
 	
 :no_coma
@@ -54,7 +62,6 @@ For /F "tokens=* delims=" %%A In (temp.log) Do (
 	Set gametype=%gametype:~0,4%
     Set gamenametype=%gamename%%gametype%
 	Set fullpath=%gamepath%%gamenametype%
-	echo.%gamenametype%
 
 	FOR /F "usebackq delims=" %%i IN (temp.log) DO (Set "Without=%%i" & Echo !Without: =!)
 	set errorlog=%str: =%
@@ -63,15 +70,6 @@ For /F "tokens=* delims=" %%A In (temp.log) Do (
 	echo %errorlog% > temp.log
 	
 	tail -1 temp.log > %errorlog% >nul 2>&1
-	
-
-	echo %fullpath%
-    echo %gamepath%
-    echo %gamenametype%>gntype.txt
-	echo %gametype%>gtype.txt
-	echo %gamename%
-	echo %gamenshort%
-	echo %str%
 	
 For /F "tokens=* delims=" %%U In (temp.log) Do (set md5=%%~nU.md5)
 
@@ -90,16 +88,21 @@ if not exist hactool.exe (
 echo ---------------------------------------------------------------------------
 echo.
 COLOR 4
-echo                     hactool.exe DID NOT FOUND!
+echo                     hactool.exe WAS NOT FOUND!
 echo.
-echo       please poot hactool.exe in the same folder with this script
+echo       please put hactool.exe in the same folder with this script
 echo                        and run script again!
 echo.
 echo Download hactool here: https://github.com/SciresM/hactool/releases/latest
 echo.
 echo ---------------------------------------------------------------------------
 echo.
-pause
+echo           Press Enter for launching browser or close the script
+echo.
+echo ---------------------------------------------------------------------------
+echo.
+pause >nul 2>&1
+explorer "https://github.com/SciresM/hactool/releases/latest"
 exit
 )
 
@@ -123,11 +126,11 @@ echo    - Programm is not freezing. Be patient!
 
 ::looking for filetype
 chdir /d %curpath%
-if "%gametype%" == ".nsp" (hactool.exe "%fullpath%" -k keys.txt -x --intype=pfs0 --pfs0dir=%tempdir_game% > %errorlog%) else (
-if "%gametype%" == ".xci" (hactool.exe "%fullpath%" -txci --securedir=%tempdir_game% > %errorlog%) else (
+if "%gametype%" == ".nsp" (hactool.exe "%fullpath%" -k keys.txt -x --intype=pfs0 --pfs0dir=%tempdir_game%>%errorlog% 2>&1) else (
+if "%gametype%" == ".xci" (hactool.exe "%fullpath%" -txci --securedir=%tempdir_game%>%errorlog% 2>&1) else (
 
 
-rem cls
+cls
 echo %gamenametype%:
 echo.
 echo ------------------------------------------------------------------------
@@ -151,7 +154,7 @@ echo.
 dir %tempdir_game% /s/a-d >nul
 IF ERRORLEVEL 1 (
 
-rem cls
+cls
 echo %gamenametype%:
 echo.
 echo ------------------------------------------------------------------------
@@ -175,14 +178,14 @@ echo * Checking of %nca_file%, please wait!
 echo    - Programm is not freezing. Be patient!
 
 ::verify biggest nca
-hactool.exe -k keys.txt -y %tempdir_game%/%nca_file% >>check.log
+hactool.exe -k keys.txt -y %tempdir_game%/%nca_file%>>check.log 2>&1
 echo    - DONE
 echo.
 
 ::check log for result
 findstr  /i /c:"Fixed-Key Signature (GOOD)" check.log>NUL
 IF ERRORLEVEL 1 (
-rem cls
+cls
 echo.
 echo ------------------------------------------------------------------------
 echo.
@@ -194,7 +197,7 @@ set md5name=md5/BAD_%md5%
 del /q %errorlog% >nul 2>&1
 
 ) ELSE (
-rem cls
+cls
 echo.
 echo ------------------------------------------------------------------------
 echo.
@@ -212,8 +215,8 @@ del /q %errorlog% >nul 2>&1
 
 if not exist md5 (mkdir md5)
 
-
 ::check windows version
+echo Calculating md5, please wait. If you do not need md5, just close the window
 systeminfo | findstr /C:"Windows 8" /C:"Windows 10" >nul
 IF ERRORLEVEL 1 (
 
@@ -225,8 +228,8 @@ if not exist fciv.exe (
 Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('http://customfw.xyz/switch_game_checker/fciv.exe','fciv.exe')
 )
 
-echo Calculating md5, please wait!
-fciv -md5 %game% > %md5name%
+fciv -md5 "%fullpath%" > %md5name%
+echo.
 echo|set /p="MD5: "
 for /f "skip=1" %%a in (%md5name%) do echo %%a >> temp.log
 tail -1 temp.log
@@ -235,8 +238,8 @@ echo.
 
 ) else  (
 
-echo Calculating md5, please wait!
-certUtil -hashfile %game% md5 > %md5name%
+certUtil -hashfile "%fullpath%" md5 > %md5name%
+echo.
 echo|set /p="MD5: "
 tail -2 %md5name% | head -1
 echo.
@@ -245,6 +248,24 @@ echo.
 ::remove tempfiles and end
 :end
 rmdir /Q /S %tempdir_game% >nul 2>&1
-del /q check.log >nul 2>&1
-
+if exist check.log (del /q check.log >nul 2>&1)
+if exist temp.log (del /q temp.log >nul 2>&1)
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
 pause
