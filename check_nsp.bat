@@ -229,7 +229,7 @@ if not exist md5 (mkdir md5)
 
 ::check windows version
 echo Calculating md5, please wait. If you do not need md5, just close the window
-systeminfo | findstr /C:"Windows 7" /C:"Windows 7" >nul
+systeminfo | findstr /C:"Windows 8" /C:"Windows 10" >nul
 IF ERRORLEVEL 1 (
 
 chdir /d %curpath%
