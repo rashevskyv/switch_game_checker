@@ -1,4 +1,4 @@
-@echo off
+rem @echo off
 chcp 65001>nul 2>&1
 
 ::search for script-path
@@ -18,6 +18,7 @@ if "%~1" neq "" (
 )) else (
 	goto :launching
 )
+
 	
 :launching
 echo ------------------------------------------------------------------------
@@ -31,12 +32,12 @@ set /p game="Game: "
 echo %game%>temp.log
 echo.
 echo.
-goto :main
+goto :set_vars
 	
 :no_coma
 set game=%~1
 echo %game%>>temp.log	
-goto :main
+goto :set_vars
 
 :coma
 echo %1>>temp.log
@@ -46,9 +47,9 @@ set "t="
 for /f "tokens=* delims=" %%i in (temp.log) do (<nul set /p s=%%i%t%>>temp1.log)
 type temp1.log>temp.log
 del temp1.log
-goto :main
+goto :set_vars
 
-:main 
+:set_vars 
 ::set vars, delete spaces and comas from filename. There is fuckng dirty code. I do not know how and why it work O_O
 For /F "tokens=* delims=" %%A In (temp.log) Do (
 
@@ -70,7 +71,14 @@ For /F "tokens=* delims=" %%A In (temp.log) Do (
 	echo %errorlog% > temp.log
 	
 	tail -1 temp.log > %errorlog% >nul 2>&1
-	
+
+::detect folder
+if "%gametype%"=="~0,4" (goto :folder) else (goto :file)
+
+:folder
+
+
+:file	
 For /F "tokens=* delims=" %%U In (temp.log) Do (set md5=%%~nU.md5)
 if exist temp.log (del /q temp.log >nul 2>&1)
 
