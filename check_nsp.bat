@@ -77,6 +77,17 @@ if "%gametype%"=="~0,4" (goto :folder) else (goto :file)
 
 :folder
 
+    set folderbefore=%gamepath%
+	set foldername=%gamename%
+	set folderpath=%folderbefore%%foldername%
+	
+	echo %folderbefore%
+	echo %foldername%
+	echo %folderpath%
+	
+	
+	
+	pause
 
 :file	
 For /F "tokens=* delims=" %%U In (temp.log) Do (set md5=%%~nU.md5)
