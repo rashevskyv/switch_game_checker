@@ -188,6 +188,7 @@ echo.
 findstr  /i /c:"Fixed-Key Signature (GOOD)" check.log>NUL
 IF ERRORLEVEL 1 (
 cls
+echo %gamenametype%:
 echo.
 echo ------------------------------------------------------------------------
 echo.
@@ -205,6 +206,7 @@ del /q %errorlog% >nul 2>&1
 
 ) ELSE (
 cls
+echo %gamenametype%:
 echo.
 echo ------------------------------------------------------------------------
 echo.
